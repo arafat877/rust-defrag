@@ -1,11 +1,11 @@
-# Contributing to RustDefrag
+﻿# Contributing to RustDefrag
 
-Thank you for your interest in contributing to RustDefrag — a systems-level NTFS defragmentation utility written in Rust.
+Thank you for your interest in contributing to RustDefrag â€” a systems-level NTFS defragmentation utility written in Rust.
 
 ## Development Setup
 
 1. Install Rust: https://www.rust-lang.org/tools/install
-2. Clone the repository: `git clone https://github.com/yourname/rust-defrag`
+2. Clone the repository: `git clone https://github.com/arafat877/rust-defrag`
 3. Enter directory: `cd rust-defrag`
 4. Build: `cargo build`
 5. Run tests: `cargo test`
@@ -24,9 +24,9 @@ cargo test
 
 ## Branching Model
 
-- `main` — stable, always passes CI
-- `feature/...` — new feature branches
-- `bugfix/...` — bug fix branches
+- `main` â€” stable, always passes CI
+- `feature/...` â€” new feature branches
+- `bugfix/...` â€” bug fix branches
 
 ## Pull Request Guidelines
 
@@ -55,3 +55,4 @@ When filing a bug include:
 ## Code of Conduct
 
 Be respectful and constructive. This is a technical project; contributions are evaluated on correctness and safety, not seniority.
+

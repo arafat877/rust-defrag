@@ -1,11 +1,11 @@
-[package]
+﻿[package]
 name = "rust-defrag"
 version = "0.1.0"
 edition = "2021"
 authors = ["RustDefrag Contributors"]
 description = "A minimal NTFS defragmentation utility implemented in Rust"
 license = "MIT"
-repository = "https://github.com/yourname/rust-defrag"
+repository = "https://github.com/arafat877/rust-defrag"
 keywords = ["defrag", "ntfs", "windows", "filesystem", "disk"]
 categories = ["command-line-utilities", "filesystem"]
 readme = "README.md"
@@ -45,3 +45,4 @@ strip = true
 
 [package.metadata.docs.rs]
 targets = ["x86_64-pc-windows-msvc"]
+

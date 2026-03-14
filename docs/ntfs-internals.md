@@ -1,4 +1,4 @@
-# NTFS Internals Reference
+﻿# NTFS Internals Reference
 
 This document explains the internal architecture of NTFS as it relates to defragmentation in RustDefrag.
 
@@ -21,7 +21,7 @@ Represents the absolute physical position of a cluster on disk. LCN 0 is the fir
 
 Represents the cluster offset within a specific file. VCN 0 is the first cluster of the file data.
 
-The mapping `VCN → LCN` is stored in the file's `DATA` attribute within the MFT as a compressed run list.
+The mapping `VCN â†’ LCN` is stored in the file's `DATA` attribute within the MFT as a compressed run list.
 
 ## Master File Table (MFT)
 
@@ -66,29 +66,32 @@ Retrieved via: `FSCTL_GET_VOLUME_BITMAP`
 Clusters are moved using: `FSCTL_MOVE_FILE`
 
 The `MOVE_FILE_DATA` structure specifies:
-- `FileHandle` — handle to the file
-- `StartingVcn` — the VCN of the first cluster to move
-- `StartingLcn` — the destination LCN
-- `ClusterCount` — number of clusters to move
+- `FileHandle` â€” handle to the file
+- `StartingVcn` â€” the VCN of the first cluster to move
+- `StartingLcn` â€” the destination LCN
+- `ClusterCount` â€” number of clusters to move
 
 ## Protected System Files
 
 These files must never be relocated by a defragmenter:
-- `$MFT` — Master File Table
-- `$MFTMirr` — MFT mirror (backup)
-- `$LogFile` — NTFS journal
-- `$Volume` — Volume metadata
-- `$AttrDef` — Attribute definitions
-- `$Bitmap` — Volume bitmap
-- `$Boot` — Boot sector
-- `$BadClus` — Bad cluster list
-- `$Secure` — Security descriptors
-- `$UpCase` — Unicode uppercase table
-- `$Extend` — Extended metadata directory
+- `$MFT` â€” Master File Table
+- `$MFTMirr` â€” MFT mirror (backup)
+- `$LogFile` â€” NTFS journal
+- `$Volume` â€” Volume metadata
+- `$AttrDef` â€” Attribute definitions
+- `$Bitmap` â€” Volume bitmap
+- `$Boot` â€” Boot sector
+- `$BadClus` â€” Bad cluster list
+- `$Secure` â€” Security descriptors
+- `$UpCase` â€” Unicode uppercase table
+- `$Extend` â€” Extended metadata directory
 
 ## Runtime Lock Files
 
 These files must be skipped at runtime:
-- `pagefile.sys` — Windows virtual memory
-- `hiberfil.sys` — Hibernation image
-- `swapfile.sys` — Modern standby swap
+- `pagefile.sys` â€” Windows virtual memory
+- `hiberfil.sys` â€” Hibernation image
+- `swapfile.sys` â€” Modern standby swap
+
+Repository: https://github.com/arafat877/rust-defrag
+

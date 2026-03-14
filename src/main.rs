@@ -1,8 +1,9 @@
-/// main.rs — RustDefrag entry point and top-level controller
+﻿/// Author : Arafat BOUCHAFRA <arafat877@gmail.com>
+/// main.rs â€” RustDefrag entry point and top-level controller
 ///
 /// Coordinates the full workflow:
-///   CLI parse → privilege check → volume open → filesystem check →
-///   scan → report → optional defrag → summary
+///   CLI parse â†’ privilege check â†’ volume open â†’ filesystem check â†’
+///   scan â†’ report â†’ optional defrag â†’ summary
 
 mod analyzer;
 mod cli;
@@ -22,7 +23,7 @@ use crate::errors::DefragError;
 use crate::progress::{ProgressReporter, Spinner};
 
 fn main() {
-    // Initialise the logger — RUST_LOG env var controls verbosity
+    // Initialise the logger â€” RUST_LOG env var controls verbosity
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("warn")).init();
 
     if let Err(e) = run() {
@@ -32,24 +33,24 @@ fn main() {
 }
 
 fn run() -> anyhow::Result<()> {
-    // ── 1. Parse CLI ──────────────────────────────────────────────────────────
+    // â”€â”€ 1. Parse CLI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let args = CliArgs::parse().context("Failed to parse arguments")?;
 
     if !args.quiet {
         print_banner();
         println!(
             "  {} Close running applications for best defragmentation results. Files in use by active processes will be skipped.\n",
-            "⚠".yellow().bold()
+            "âš ".yellow().bold()
         );
     }
 
-    // ── 2. Privilege check ────────────────────────────────────────────────────
+    // â”€â”€ 2. Privilege check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if !winapi::is_elevated() {
         anyhow::bail!(DefragError::InsufficientPrivileges);
     }
 
-    // ── 3. Open volume ────────────────────────────────────────────────────────
-    let spin = Spinner::new(&format!("Opening volume {} …", args.drive_label));
+    // â”€â”€ 3. Open volume â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    let spin = Spinner::new(&format!("Opening volume {} â€¦", args.drive_label));
     let (vol_handle, vol_info) =
         volume::open_volume(&args.drive, &args.drive_label).with_context(|| {
             format!(
@@ -58,7 +59,7 @@ fn run() -> anyhow::Result<()> {
             )
         })?;
     spin.finish_ok(&format!(
-        "Volume {} opened  [{} · cluster {}]",
+        "Volume {} opened  [{} Â· cluster {}]",
         vol_info.label,
         vol_info.filesystem,
         format_bytes(vol_info.cluster_size)
@@ -68,39 +69,39 @@ fn run() -> anyhow::Result<()> {
         print_volume_summary(&vol_info);
     }
 
-    // ── 4. Filesystem check ───────────────────────────────────────────────────
+    // â”€â”€ 4. Filesystem check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if !vol_info.filesystem.eq_ignore_ascii_case("NTFS") {
         anyhow::bail!(DefragError::UnsupportedFilesystem(
             vol_info.filesystem.clone()
         ));
     }
 
-    // ── 5. Set process priority (optional) ───────────────────────────────────
+    // â”€â”€ 5. Set process priority (optional) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if args.high_priority {
         set_high_priority();
     }
 
-    // ── 6. Enumerate files ────────────────────────────────────────────────────
+    // â”€â”€ 6. Enumerate files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let root = std::path::PathBuf::from(format!("{}\\", args.drive_label));
-    let spin2 = Spinner::new("Enumerating files …");
+    let spin2 = Spinner::new("Enumerating files â€¦");
     let mut last_ui_tick = Instant::now();
     let files = volume::enumerate_files_with_progress(&root, |count| {
         if last_ui_tick.elapsed() >= Duration::from_millis(250) {
-            spin2.set_message(&format!("Enumerating files … {} found", count));
+            spin2.set_message(&format!("Enumerating files â€¦ {} found", count));
             last_ui_tick = Instant::now();
         }
     })
     .context("File enumeration failed")?;
     spin2.finish_ok(&format!("Found {} files", files.len()));
 
-    // ── 7. Analyse fragmentation ──────────────────────────────────────────────
+    // â”€â”€ 7. Analyse fragmentation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let reporter = ProgressReporter::new(args.quiet);
     reporter.set_scan_total(files.len());
 
     if !args.quiet {
         println!(
             "\n{}",
-            format!(" Analysing {} …", args.drive_label)
+            format!(" Analysing {} â€¦", args.drive_label)
                 .cyan()
                 .bold()
         );
@@ -114,7 +115,7 @@ fn run() -> anyhow::Result<()> {
     })
     .context("Analysis failed")?;
 
-    // ── 8. Print report ───────────────────────────────────────────────────────
+    // â”€â”€ 8. Print report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if !args.quiet {
         print_analysis_report(&report);
     }
@@ -122,19 +123,19 @@ fn run() -> anyhow::Result<()> {
     if args.analyze_only {
         if !args.quiet {
             println!(
-                "\n{} Analysis only — skipping defragmentation (/A flag).",
-                "ℹ".blue()
+                "\n{} Analysis only â€” skipping defragmentation (/A flag).",
+                "â„¹".blue()
             );
         }
         return Ok(());
     }
 
-    // ── 9. Defragmentation ────────────────────────────────────────────────────
+    // â”€â”€ 9. Defragmentation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if report.fragmented.is_empty() {
         if !args.quiet {
             println!(
                 "\n{} No fragmented files found. Volume is already optimised.",
-                "✓".green()
+                "âœ“".green()
             );
         }
         return Ok(());
@@ -144,7 +145,7 @@ fn run() -> anyhow::Result<()> {
         println!(
             "\n{}",
             format!(
-                " Defragmenting {} files …",
+                " Defragmenting {} files â€¦",
                 report.fragmented_files
             )
             .green()
@@ -163,7 +164,7 @@ fn run() -> anyhow::Result<()> {
     )
     .context("Defragmentation failed")?;
 
-    // ── 10. Final summary ─────────────────────────────────────────────────────
+    // â”€â”€ 10. Final summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if !args.quiet {
         print_defrag_summary(&stats, &vol_info);
     }
@@ -172,9 +173,9 @@ fn run() -> anyhow::Result<()> {
     Ok(())
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 //  Display helpers
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 fn print_banner() {
     println!(
@@ -192,6 +193,7 @@ fn print_banner() {
         "RustDefrag".cyan().bold(),
         env!("CARGO_PKG_VERSION")
     );
+    println!("  Author : Arafat BOUCHAFRA <arafat877@gmail.com>\n");
 }
 
 fn print_volume_summary(info: &volume::VolumeInfo) {
@@ -218,7 +220,7 @@ fn print_volume_summary(info: &volume::VolumeInfo) {
 }
 
 fn print_analysis_report(report: &analyzer::FragmentationReport) {
-    println!("\n  {}", "── Fragmentation Report ──────────────────────".dimmed());
+    println!("\n  {}", "â”€â”€ Fragmentation Report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€".dimmed());
     println!("  Total files       : {}", report.total_files);
     println!(
         "  Fragmented files  : {}  ({:.1}%)",
@@ -245,7 +247,7 @@ fn print_analysis_report(report: &analyzer::FragmentationReport) {
 }
 
 fn print_defrag_summary(stats: &defrag::DefragStats, vol: &volume::VolumeInfo) {
-    println!("\n  {}", "── Defragmentation Summary ───────────────────".dimmed());
+    println!("\n  {}", "â”€â”€ Defragmentation Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€".dimmed());
     println!("  Files attempted   : {}", stats.files_attempted);
     println!(
         "  Files defragged   : {}",
@@ -258,7 +260,7 @@ fn print_defrag_summary(stats: &defrag::DefragStats, vol: &volume::VolumeInfo) {
         stats.clusters_moved,
         format_bytes(stats.clusters_moved * vol.cluster_size)
     );
-    println!("\n  {} Defragmentation complete.\n", "✓".green().bold());
+    println!("\n  {} Defragmentation complete.\n", "âœ“".green().bold());
 }
 
 fn format_bytes(bytes: u64) -> String {
@@ -280,9 +282,9 @@ fn format_bytes(bytes: u64) -> String {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 //  Priority helper
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 fn set_high_priority() {
     #[cfg(target_os = "windows")]
@@ -296,5 +298,6 @@ fn set_high_priority() {
     }
     info!("Process priority set to HIGH.");
 }
+
 
 

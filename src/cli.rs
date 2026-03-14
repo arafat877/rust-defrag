@@ -1,13 +1,14 @@
-/// cli.rs — Command-line interface for RustDefrag
+﻿/// Author : Arafat BOUCHAFRA <arafat877@gmail.com>
+/// cli.rs â€” Command-line interface for RustDefrag
 ///
 /// Parses Windows-compatible flags  (/A  /V  /Q  /H  /?)
 /// using `clap` under the hood while keeping the original UX.
 
 use clap::Parser;
 
-// ── Raw clap definition ────────────────────────────────────────────────────────
+// â”€â”€ Raw clap definition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/// RustDefrag — Minimal NTFS Defragmentation Utility
+/// RustDefrag â€” Minimal NTFS Defragmentation Utility
 ///
 /// Examples:
 ///   defrag C:
@@ -19,7 +20,7 @@ use clap::Parser;
     name = "defrag",
     version = env!("CARGO_PKG_VERSION"),
     author,
-    about = "RustDefrag — Minimal NTFS Defragmentation Utility (MVP)",
+    about = "RustDefrag â€” Minimal NTFS Defragmentation Utility (MVP)",
     long_about = None,
     disable_help_flag = true,    // we handle /? ourselves
     disable_version_flag = true, // reserve -V for verbose mode
@@ -29,19 +30,19 @@ pub struct RawArgs {
     #[arg(value_name = "VOLUME")]
     pub drive: String,
 
-    /// Analyze only — display fragmentation report without defragmenting
+    /// Analyze only â€” display fragmentation report without defragmenting
     #[arg(long = "A", short = 'A', action = clap::ArgAction::SetTrue)]
     pub analyze_only: bool,
 
-    /// Verbose — print detailed per-file progress
+    /// Verbose â€” print detailed per-file progress
     #[arg(long = "V", short = 'V', action = clap::ArgAction::SetTrue)]
     pub verbose: bool,
 
-    /// Quiet — suppress all output except errors
+    /// Quiet â€” suppress all output except errors
     #[arg(long = "Q", short = 'Q', action = clap::ArgAction::SetTrue)]
     pub quiet: bool,
 
-    /// High priority — run at elevated OS scheduling priority
+    /// High priority â€” run at elevated OS scheduling priority
     #[arg(long = "H", short = 'H', action = clap::ArgAction::SetTrue)]
     pub high_priority: bool,
 
@@ -50,12 +51,12 @@ pub struct RawArgs {
     pub help_flag: Option<bool>,
 }
 
-// ── Validated, domain-level args ──────────────────────────────────────────────
+// â”€â”€ Validated, domain-level args â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /// Validated CLI arguments used throughout the application.
 #[derive(Debug, Clone)]
 pub struct CliArgs {
-    /// Normalised drive root, e.g. `C:` → `\\.\C:`
+    /// Normalised drive root, e.g. `C:` â†’ `\\.\C:`
     pub drive: String,
 
     /// Human-readable label, e.g. `C:`
@@ -85,7 +86,7 @@ impl CliArgs {
         Self::validate(raw)
     }
 
-    /// Replace `/A` → `--A`, `/V` → `--V`, etc. so clap can parse them.
+    /// Replace `/A` â†’ `--A`, `/V` â†’ `--V`, etc. so clap can parse them.
     fn normalise_windows_flags() -> Vec<String> {
         std::env::args()
             .map(|arg| {
@@ -132,7 +133,7 @@ impl CliArgs {
     }
 }
 
-// ── Tests ─────────────────────────────────────────────────────────────────────
+// â”€â”€ Tests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 #[cfg(test)]
 mod tests {
@@ -187,6 +188,7 @@ mod tests {
         assert!(result.is_err());
     }
 }
+
 
 
 

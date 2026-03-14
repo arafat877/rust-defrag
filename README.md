@@ -1,8 +1,8 @@
-# RustDefrag
+﻿# RustDefrag
 
-**A minimal NTFS defragmentation utility implemented in Rust — fully compatible with Windows `defrag.exe` CLI conventions.**
+**A minimal NTFS defragmentation utility implemented in Rust â€” fully compatible with Windows `defrag.exe` CLI conventions.**
 
-[![CI](https://github.com/yourname/rust-defrag/actions/workflows/ci.yml/badge.svg)](https://github.com/yourname/rust-defrag/actions)
+[![CI](https://github.com/arafat877/rust-defrag/actions/workflows/ci.yml/badge.svg)](https://github.com/arafat877/rust-defrag/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.75%2B-orange)](https://www.rust-lang.org/)
 
@@ -12,8 +12,8 @@
 
 RustDefrag is a systems-level tool that interacts directly with the Windows NTFS filesystem via `DeviceIoControl`, performing the same operations as the built-in `defrag.exe`:
 
-1. **Analyse** — scan the volume, retrieve cluster run lists for every file, compute fragmentation statistics.
-2. **Defragment** — move fragmented cluster runs into contiguous free regions using `FSCTL_MOVE_FILE`.
+1. **Analyse** â€” scan the volume, retrieve cluster run lists for every file, compute fragmentation statistics.
+2. **Defragment** â€” move fragmented cluster runs into contiguous free regions using `FSCTL_MOVE_FILE`.
 
 It is written entirely in **safe Rust** (with a minimal `unsafe` boundary in `winapi.rs`) and is structured as a modular, testable codebase.
 
@@ -23,16 +23,16 @@ It is written entirely in **safe Rust** (with a minimal `unsafe` boundary in `wi
 
 | Feature | Status |
 |---|---|
-| NTFS volume analysis | ✅ MVP |
-| Fragmentation statistics | ✅ MVP |
-| Cluster relocation (`FSCTL_MOVE_FILE`) | ✅ MVP |
-| Progress display (indicatif) | ✅ MVP |
-| Administrator privilege detection | ✅ MVP |
-| Safe file skip (pagefile, hiberfil, $MFT …) | ✅ MVP |
-| Parallel file scanning (rayon) | ✅ MVP |
-| FAT32 / exFAT support | 🔜 Phase 2 |
-| Disk visualiser / heatmap | 🔜 Phase 3 |
-| Scheduler / enterprise policies | 🔜 Phase 4 |
+| NTFS volume analysis | âœ… MVP |
+| Fragmentation statistics | âœ… MVP |
+| Cluster relocation (`FSCTL_MOVE_FILE`) | âœ… MVP |
+| Progress display (indicatif) | âœ… MVP |
+| Administrator privilege detection | âœ… MVP |
+| Safe file skip (pagefile, hiberfil, $MFT â€¦) | âœ… MVP |
+| Parallel file scanning (rayon) | âœ… MVP |
+| FAT32 / exFAT support | ðŸ”œ Phase 2 |
+| Disk visualiser / heatmap | ðŸ”œ Phase 3 |
+| Scheduler / enterprise policies | ðŸ”œ Phase 4 |
 
 ---
 
@@ -47,7 +47,7 @@ It is written entirely in **safe Rust** (with a minimal `unsafe` boundary in `wi
 ### Build from source
 
 ```powershell
-git clone https://github.com/yourname/rust-defrag
+git clone https://github.com/arafat877/rust-defrag
 cd rust-defrag
 cargo build --release
 ```
@@ -60,7 +60,7 @@ target\release\defrag.exe
 
 ### Run
 
-> **Administrator rights required.** Right-click PowerShell → *Run as administrator*.
+> **Administrator rights required.** Right-click PowerShell â†’ *Run as administrator*.
 
 ```powershell
 .\defrag.exe C:         # Analyse + defragment
@@ -83,10 +83,10 @@ ARGUMENTS:
     <VOLUME>    Drive letter, e.g. C:
 
 OPTIONS:
-    /A    Analyze only — print report, do not defragment
-    /V    Verbose — per-file progress output
-    /Q    Quiet — suppress all output except errors
-    /H    High priority — elevate OS scheduling class
+    /A    Analyze only â€” print report, do not defragment
+    /V    Verbose â€” per-file progress output
+    /Q    Quiet â€” suppress all output except errors
+    /H    High priority â€” elevate OS scheduling class
     /?    Show this help message
 ```
 
@@ -101,26 +101,26 @@ OPTIONS:
   Total space  : 476.84 GB
   Free space   : 198.21 GB (58.4% used)
 
- Analysing C: …
-████████████████████░░░░░░░░░ 72% (files analysed)
+ Analysing C: â€¦
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘ 72% (files analysed)
 
-── Fragmentation Report ──────────────────────
+â”€â”€ Fragmentation Report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Total files       : 124,892
   Fragmented files  : 1,247  (1.0%)
   Total fragments   : 3,891
   Average frags/file: 1.03
   Most fragmented   : "build_output.bin"  (47 fragments)
 
- Defragmenting 1,247 files …
-██████████████████████████░░░ 91% (files processed)
+ Defragmenting 1,247 files â€¦
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘ 91% (files processed)
 
-── Defragmentation Summary ───────────────────
+â”€â”€ Defragmentation Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Files attempted   : 1,247
   Files defragged   : 1,198
   Files skipped     : 49
   Clusters moved    : 892,104  (3.39 GB)
 
-  ✓ Defragmentation complete.
+  âœ“ Defragmentation complete.
 ```
 
 ---
@@ -129,24 +129,24 @@ OPTIONS:
 
 ```
 CLI (cli.rs)
-    │
-    ▼
-main.rs  ──► privilege check (winapi::is_elevated)
-    │
-    ├──► volume.rs   ──► open_volume / get_cluster_size / enumerate_files
-    │        │
-    │        └──► winapi.rs  ──► CreateFileW / DeviceIoControl
-    │
-    ├──► analyzer.rs ──► analyse_files (parallel via rayon)
-    │        │
-    │        └──► winapi::get_retrieval_pointers (FSCTL_GET_RETRIEVAL_POINTERS)
-    │
-    ├──► defrag.rs   ──► defragment / defrag_single_file
-    │        │
-    │        └──► winapi::move_file_clusters (FSCTL_MOVE_FILE)
-    │
-    ├──► progress.rs ──► ProgressReporter / Spinner (indicatif)
-    └──► errors.rs   ──► DefragError / DefragResult
+    â”‚
+    â–¼
+main.rs  â”€â”€â–º privilege check (winapi::is_elevated)
+    â”‚
+    â”œâ”€â”€â–º volume.rs   â”€â”€â–º open_volume / get_cluster_size / enumerate_files
+    â”‚        â”‚
+    â”‚        â””â”€â”€â–º winapi.rs  â”€â”€â–º CreateFileW / DeviceIoControl
+    â”‚
+    â”œâ”€â”€â–º analyzer.rs â”€â”€â–º analyse_files (parallel via rayon)
+    â”‚        â”‚
+    â”‚        â””â”€â”€â–º winapi::get_retrieval_pointers (FSCTL_GET_RETRIEVAL_POINTERS)
+    â”‚
+    â”œâ”€â”€â–º defrag.rs   â”€â”€â–º defragment / defrag_single_file
+    â”‚        â”‚
+    â”‚        â””â”€â”€â–º winapi::move_file_clusters (FSCTL_MOVE_FILE)
+    â”‚
+    â”œâ”€â”€â–º progress.rs â”€â”€â–º ProgressReporter / Spinner (indicatif)
+    â””â”€â”€â–º errors.rs   â”€â”€â–º DefragError / DefragResult
 ```
 
 ### Module responsibilities
@@ -168,11 +168,11 @@ main.rs  ──► privilege check (winapi::is_elevated)
 
 RustDefrag **never** touches:
 
-- NTFS metadata files (`$MFT`, `$LogFile`, `$Bitmap`, `$Volume`, …)
+- NTFS metadata files (`$MFT`, `$LogFile`, `$Bitmap`, `$Volume`, â€¦)
 - `pagefile.sys`, `hiberfil.sys`, `swapfile.sys`
 - Files with `FILE_ATTRIBUTE_SYSTEM` or `FILE_ATTRIBUTE_TEMPORARY`
 
-On any move failure the file is logged and skipped — the operation never aborts.
+On any move failure the file is logged and skipped â€” the operation never aborts.
 
 ---
 
@@ -235,7 +235,7 @@ Topics covered:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT â€” see [LICENSE](LICENSE).
 
 ---
 
@@ -245,3 +245,4 @@ RustDefrag builds upon:
 - [Microsoft NTFS documentation](https://docs.microsoft.com/en-us/windows/win32/fileio/ntfs-technical-reference)
 - The [`windows`](https://crates.io/crates/windows) Rust crate
 - [`indicatif`](https://crates.io/crates/indicatif), [`clap`](https://crates.io/crates/clap), [`rayon`](https://crates.io/crates/rayon)
+

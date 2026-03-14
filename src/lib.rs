@@ -1,4 +1,5 @@
-/// lib.rs — Public library surface for integration tests
+﻿/// Author : Arafat BOUCHAFRA <arafat877@gmail.com>
+/// lib.rs â€” Public library surface for integration tests
 ///
 /// This file re-exports the internal modules so integration tests in
 /// `tests/` can access them without duplication.
@@ -10,3 +11,4 @@ pub mod errors;
 pub mod progress;
 pub mod volume;
 pub mod winapi;
+

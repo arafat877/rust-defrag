@@ -1,79 +1,79 @@
-# RustDefrag Architecture
+﻿# RustDefrag Architecture
 
 RustDefrag is built using a modular layered architecture to ensure safety, maintainability, and extensibility.
 
 ## System Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                      CLI Layer                          │
-│                      (cli.rs)                           │
-└─────────────────────────┬───────────────────────────────┘
-                          │
-┌─────────────────────────▼───────────────────────────────┐
-│                     Controller                          │
-│                     (main.rs)                           │
-└──────┬───────────────┬─────────────────┬────────────────┘
-       │               │                 │
-┌──────▼──────┐ ┌──────▼──────┐ ┌───────▼──────┐
-│  Volume     │ │  Analyzer   │ │  Defrag      │
-│  (volume.rs)│ │(analyzer.rs)│ │  (defrag.rs) │
-└──────┬──────┘ └──────┬──────┘ └──────┬───────┘
-       │               │               │
-┌──────▼───────────────▼───────────────▼───────┐
-│              Windows I/O Layer                │
-│                 (winapi.rs)                   │
-└───────────────────────┬───────────────────────┘
-                        │
-┌───────────────────────▼───────────────────────┐
-│              NTFS Volume (disk)                │
-└────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                      CLI Layer                          â”‚
+â”‚                      (cli.rs)                           â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                          â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                     Controller                          â”‚
+â”‚                     (main.rs)                           â”‚
+â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+       â”‚               â”‚                 â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”
+â”‚  Volume     â”‚ â”‚  Analyzer   â”‚ â”‚  Defrag      â”‚
+â”‚  (volume.rs)â”‚ â”‚(analyzer.rs)â”‚ â”‚  (defrag.rs) â”‚
+â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
+       â”‚               â”‚               â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”
+â”‚              Windows I/O Layer                â”‚
+â”‚                 (winapi.rs)                   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                        â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚              NTFS Volume (disk)                â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ## Module Responsibilities
 
-### `cli.rs` — Argument Parser
+### `cli.rs` â€” Argument Parser
 - Parses Windows-style `/A /V /Q /H /?` flags using `clap`
-- Normalises drive letters to Win32 device paths (`C:` → `\\.\C:`)
+- Normalises drive letters to Win32 device paths (`C:` â†’ `\\.\C:`)
 - Validates input before any I/O occurs
 
-### `main.rs` — Controller
+### `main.rs` â€” Controller
 - Top-level workflow orchestration
 - Privilege verification
-- Phase sequencing: open → enumerate → analyse → defrag → report
+- Phase sequencing: open â†’ enumerate â†’ analyse â†’ defrag â†’ report
 - Terminal output formatting
 
-### `volume.rs` — Volume Layer
+### `volume.rs` â€” Volume Layer
 - Opens the NTFS volume device handle
 - Queries cluster geometry (`GetDiskFreeSpaceW`)
 - Loads the volume cluster bitmap (`FSCTL_GET_VOLUME_BITMAP`)
 - Enumerates files recursively with system/temp tagging
 
-### `analyzer.rs` — Fragmentation Analyser
+### `analyzer.rs` â€” Fragmentation Analyser
 - Parallel file scan using `rayon`
 - Retrieves cluster run lists via `FSCTL_GET_RETRIEVAL_POINTERS`
 - Computes per-file fragment counts
 - Builds the aggregate `FragmentationReport`
 
-### `defrag.rs` — Defrag Engine
+### `defrag.rs` â€” Defrag Engine
 - Iterates fragmented files (worst-first)
 - Locates contiguous free regions in the bitmap
 - Calls `FSCTL_MOVE_FILE` for each cluster run
 - Updates the in-memory bitmap after each move
 - Enforces the protected-file list
 
-### `winapi.rs` — Windows API Boundary
+### `winapi.rs` â€” Windows API Boundary
 - **All `unsafe` code lives here and only here**
 - Wraps `DeviceIoControl` with typed Rust structures
 - Provides compile-time stubs for non-Windows builds
 - Maps Win32 error codes to `DefragError` variants
 
-### `progress.rs` — UI
+### `progress.rs` â€” UI
 - `ProgressReporter`: dual-bar layout (scan + defrag) via `indicatif`
 - `Spinner`: indeterminate spinner for quick operations
 - Quiet mode suppresses all progress output
 
-### `errors.rs` — Error Types
+### `errors.rs` â€” Error Types
 - Typed `DefragError` enum with user-friendly messages
 - `DefragResult<T>` alias for `Result<T, anyhow::Error>`
 - `api_error()` helper for wrapping Win32 codes
@@ -81,12 +81,12 @@ RustDefrag is built using a modular layered architecture to ensure safety, maint
 ## Data Flow
 
 ```
-FileEntry[] ──► analyse_files() ──► FragmentationReport
-                                         │
+FileEntry[] â”€â”€â–º analyse_files() â”€â”€â–º FragmentationReport
+                                         â”‚
                                     fragmented[]
-                                         │
-                                    defragment() ──► DefragStats
-                                         │
+                                         â”‚
+                                    defragment() â”€â”€â–º DefragStats
+                                         â”‚
                                     VolumeBitmap (mutated in-place)
 ```
 
@@ -97,3 +97,6 @@ FileEntry[] ──► analyse_files() ──► FragmentationReport
 - **Testability**: non-Windows stubs let the full test suite run on Linux CI
 - **Performance**: parallel scanning via `rayon`; sequential cluster moves (required by Windows)
 - **Resilience**: any per-file failure is logged and skipped; the overall operation never aborts
+
+Repository: https://github.com/arafat877/rust-defrag
+

@@ -1,4 +1,5 @@
-﻿/// progress.rs - Terminal progress reporting using `indicatif`
+﻿/// Author : Arafat BOUCHAFRA <arafat877@gmail.com>
+/// progress.rs - Terminal progress reporting using `indicatif`
 ///
 /// Provides a consistent UI for the scan and defrag phases.
 /// Quiet mode suppresses all bars; verbose mode adds file-level logging.
@@ -133,3 +134,4 @@ impl Spinner {
         self.0.finish_with_message(format!("ERR {}", msg));
     }
 }
+

@@ -1,4 +1,5 @@
-/// errors.rs — Centralized error definitions for RustDefrag
+﻿/// Author : Arafat BOUCHAFRA <arafat877@gmail.com>
+/// errors.rs â€” Centralized error definitions for RustDefrag
 ///
 /// Uses `anyhow` for flexible error propagation and `thiserror`-style
 /// custom variants for domain-specific failures.
@@ -93,7 +94,7 @@ impl From<std::io::Error> for DefragError {
     }
 }
 
-/// Convenience alias — every function in RustDefrag returns this.
+/// Convenience alias â€” every function in RustDefrag returns this.
 pub type DefragResult<T> = Result<T, anyhow::Error>;
 
 /// Helper: wrap a Windows error code into a [`DefragError::ApiFailure`].
@@ -101,3 +102,4 @@ pub type DefragResult<T> = Result<T, anyhow::Error>;
 pub fn api_error(api: &'static str, code: u32) -> anyhow::Error {
     anyhow::Error::new(DefragError::ApiFailure { api, code })
 }
+
