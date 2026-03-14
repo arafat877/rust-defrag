@@ -40,7 +40,7 @@ fn run() -> anyhow::Result<()> {
         print_banner();
         println!(
             "  {} Close running applications for best defragmentation results. Files in use by active processes will be skipped.\n",
-            "âš ".yellow().bold()
+            "WARNING:".yellow().bold()
         );
     }
 
@@ -50,7 +50,7 @@ fn run() -> anyhow::Result<()> {
     }
 
     // â”€â”€ 3. Open volume â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    let spin = Spinner::new(&format!("Opening volume {} â€¦", args.drive_label));
+    let spin = Spinner::new(&format!("Opening volume {} ...", args.drive_label));
     let (vol_handle, vol_info) =
         volume::open_volume(&args.drive, &args.drive_label).with_context(|| {
             format!(
@@ -59,7 +59,7 @@ fn run() -> anyhow::Result<()> {
             )
         })?;
     spin.finish_ok(&format!(
-        "Volume {} opened  [{} Â· cluster {}]",
+        "Volume {} opened  [{} - cluster {}]",
         vol_info.label,
         vol_info.filesystem,
         format_bytes(vol_info.cluster_size)
@@ -83,11 +83,11 @@ fn run() -> anyhow::Result<()> {
 
     // â”€â”€ 6. Enumerate files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let root = std::path::PathBuf::from(format!("{}\\", args.drive_label));
-    let spin2 = Spinner::new("Enumerating files â€¦");
+    let spin2 = Spinner::new("Enumerating files ...");
     let mut last_ui_tick = Instant::now();
     let files = volume::enumerate_files_with_progress(&root, |count| {
         if last_ui_tick.elapsed() >= Duration::from_millis(250) {
-            spin2.set_message(&format!("Enumerating files â€¦ {} found", count));
+            spin2.set_message(&format!("Enumerating files ... {} found", count));
             last_ui_tick = Instant::now();
         }
     })
@@ -101,7 +101,7 @@ fn run() -> anyhow::Result<()> {
     if !args.quiet {
         println!(
             "\n{}",
-            format!(" Analysing {} â€¦", args.drive_label)
+            format!(" Analysing {} ...", args.drive_label)
                 .cyan()
                 .bold()
         );
@@ -123,8 +123,8 @@ fn run() -> anyhow::Result<()> {
     if args.analyze_only {
         if !args.quiet {
             println!(
-                "\n{} Analysis only â€” skipping defragmentation (/A flag).",
-                "â„¹".blue()
+                "\n{} Analysis only - skipping defragmentation (/A flag).",
+                "INFO:".blue()
             );
         }
         return Ok(());
@@ -135,7 +135,7 @@ fn run() -> anyhow::Result<()> {
         if !args.quiet {
             println!(
                 "\n{} No fragmented files found. Volume is already optimised.",
-                "âœ“".green()
+                "OK".green()
             );
         }
         return Ok(());
@@ -145,7 +145,7 @@ fn run() -> anyhow::Result<()> {
         println!(
             "\n{}",
             format!(
-                " Defragmenting {} files â€¦",
+                " Defragmenting {} files ...",
                 report.fragmented_files
             )
             .green()
@@ -220,7 +220,7 @@ fn print_volume_summary(info: &volume::VolumeInfo) {
 }
 
 fn print_analysis_report(report: &analyzer::FragmentationReport) {
-    println!("\n  {}", "â”€â”€ Fragmentation Report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€".dimmed());
+    println!("\n  {}", "-- Fragmentation Report ----------------------".dimmed());
     println!("  Total files       : {}", report.total_files);
     println!(
         "  Fragmented files  : {}  ({:.1}%)",
@@ -247,7 +247,7 @@ fn print_analysis_report(report: &analyzer::FragmentationReport) {
 }
 
 fn print_defrag_summary(stats: &defrag::DefragStats, vol: &volume::VolumeInfo) {
-    println!("\n  {}", "â”€â”€ Defragmentation Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€".dimmed());
+    println!("\n  {}", "-- Defragmentation Summary -------------------".dimmed());
     println!("  Files attempted   : {}", stats.files_attempted);
     println!(
         "  Files defragged   : {}",
@@ -260,7 +260,7 @@ fn print_defrag_summary(stats: &defrag::DefragStats, vol: &volume::VolumeInfo) {
         stats.clusters_moved,
         format_bytes(stats.clusters_moved * vol.cluster_size)
     );
-    println!("\n  {} Defragmentation complete.\n", "âœ“".green().bold());
+    println!("\n  {} Defragmentation complete.\n", "OK".green().bold());
 }
 
 fn format_bytes(bytes: u64) -> String {
