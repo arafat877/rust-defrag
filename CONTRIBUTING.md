@@ -1,6 +1,6 @@
-﻿# Contributing to RustDefrag
+# Contributing to RustDefrag
 
-Thank you for your interest in contributing to RustDefrag â€” a systems-level NTFS defragmentation utility written in Rust.
+Thank you for your interest in contributing to RustDefrag - a systems-level NTFS defragmentation utility written in Rust.
 
 ## Development Setup
 
@@ -24,23 +24,23 @@ cargo test
 
 ## Branching Model
 
-- `main` â€” stable, always passes CI
-- `feature/...` â€” new feature branches
-- `bugfix/...` â€” bug fix branches
+- `main` - stable, always passes CI
+- `feature/...` - new feature branches
+- `bugfix/...` - bug-fix branches
 
 ## Pull Request Guidelines
 
 Pull requests must:
 - Include a clear description of the change
 - Pass all CI checks (fmt, clippy, test, build)
-- Add or update tests for new behaviour
-- Not touch `pagefile.sys`, `hiberfil.sys` or NTFS metadata files in logic changes
+- Add or update tests for new behavior
+- Keep system-file safety rules intact (`pagefile.sys`, `hiberfil.sys`, NTFS metadata)
 
 ## Areas for Contribution
 
 - NTFS parsing improvements
-- Cluster relocation optimisation
-- Disk visualisation engine
+- Cluster relocation optimization
+- Disk visualization engine
 - Documentation and examples
 - Test infrastructure (mock volumes)
 
@@ -49,10 +49,9 @@ Pull requests must:
 When filing a bug include:
 - Windows version and edition
 - Filesystem type of the target volume
-- The exact command used
-- Full error output (run with `RUST_LOG=debug` for verbose logs)
+- Exact command used
+- Full error output (`RUST_LOG=debug` for verbose logs)
 
 ## Code of Conduct
 
-Be respectful and constructive. This is a technical project; contributions are evaluated on correctness and safety, not seniority.
-
+Be respectful and constructive. Contributions are evaluated on correctness and safety, not seniority.
