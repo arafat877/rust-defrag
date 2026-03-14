@@ -132,9 +132,13 @@ where
         }
     }
 
-    // Sort fragmented files worst-first for defrag prioritisation
-    rep.fragmented
-        .sort_unstable_by(|a, b| b.fragment_count.cmp(&a.fragment_count));
+    // Prioritize largest fragmented files first to maximize impact per move.
+    // Tie-break by fragment count so heavily split files are still preferred.
+    rep.fragmented.sort_unstable_by(|a, b| {
+        b.total_clusters()
+            .cmp(&a.total_clusters())
+            .then_with(|| b.fragment_count.cmp(&a.fragment_count))
+    });
 
     Ok(std::mem::take(&mut *rep))
 }
@@ -280,6 +284,35 @@ mod tests {
             ],
         };
         assert_eq!(info.total_clusters(), 15);
+    }
+
+    #[test]
+    fn test_largest_first_sorting() {
+        let mut rep = FragmentationReport {
+            fragmented: vec![
+                FileFragInfo {
+                    path: PathBuf::from("small.bin"),
+                    fragment_count: 50,
+                    is_fragmented: true,
+                    runs: vec![ClusterRun { vcn: 0, lcn: 1, length: 10 }],
+                },
+                FileFragInfo {
+                    path: PathBuf::from("large.bin"),
+                    fragment_count: 2,
+                    is_fragmented: true,
+                    runs: vec![ClusterRun { vcn: 0, lcn: 2, length: 100 }],
+                },
+            ],
+            ..Default::default()
+        };
+
+        rep.fragmented.sort_unstable_by(|a, b| {
+            b.total_clusters()
+                .cmp(&a.total_clusters())
+                .then_with(|| b.fragment_count.cmp(&a.fragment_count))
+        });
+
+        assert_eq!(rep.fragmented[0].path, PathBuf::from("large.bin"));
     }
 }
 
