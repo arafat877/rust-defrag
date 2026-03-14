@@ -1,0 +1,47 @@
+[package]
+name = "rust-defrag"
+version = "0.1.0"
+edition = "2021"
+authors = ["RustDefrag Contributors"]
+description = "A minimal NTFS defragmentation utility implemented in Rust"
+license = "MIT"
+repository = "https://github.com/yourname/rust-defrag"
+keywords = ["defrag", "ntfs", "windows", "filesystem", "disk"]
+categories = ["command-line-utilities", "filesystem"]
+readme = "README.md"
+
+[[bin]]
+name = "defrag"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+indicatif = "0.17"
+log = "0.4"
+env_logger = "0.10"
+rayon = "1.8"
+colored = "2"
+chrono = "0.4"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.54", features = [
+    "Win32_Foundation",
+    "Win32_System_IO",
+    "Win32_Storage_FileSystem",
+    "Win32_Security",
+    "Win32_System_Threading",
+    "Win32_System_SystemServices",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[package.metadata.docs.rs]
+targets = ["x86_64-pc-windows-msvc"]
